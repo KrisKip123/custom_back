@@ -6,3 +6,39 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Profile {
+  firstName String?
+  lastName  String?
+  birthday  DateTime?
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
+}
+
+model Company {
+  id          String   @id @default(uuid())
+  nameCompany String
+  dateCreate  DateTime @default(now())
+  user        User?    @relation(fields: [usersId], references: [id])
+  usersId     String   @unique
+}
+
+model User {
+  id         String    @id @default(uuid())
+  name       String
+  email      String    @unique
+  salt       String
+  hash       String
+  dateCreate DateTime  @default(now())
+  profile    Profile?
+  company    Company[]
+}
+
+model PromoGame {
+  id         String   @id @default(uuid())
+  dateCreate DateTime @default(now())
+  nameGame   String
+  startDate  DateTime
+  endDate    DateTime
+}
